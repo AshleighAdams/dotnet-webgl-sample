@@ -12,6 +12,15 @@
   <body>
     <div id="app">Hi! Check web console to see if the sample is working!</div>
 
+    <canvas width="600" height="675" id="canvas">
+    </canvas>
+
+    <script type='text/javascript'>
+      var Module = {
+        canvas: document.getElementById("canvas")
+      };
+    </script>
+
     <script src="_framework/blazor.webassembly.js"></script>
   </body>
 </html>
