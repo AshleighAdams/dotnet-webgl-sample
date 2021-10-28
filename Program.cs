@@ -5,6 +5,8 @@ using Microsoft.JSInterop.WebAssembly;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using WaveEngine.Bindings.OpenGLES;
 using System.Runtime.CompilerServices;
+using Microsoft.JSInterop;
+using System.Threading.Tasks;
 
 namespace WasmTest;
 
@@ -12,7 +14,6 @@ internal class MyRuntime : WebAssemblyJSRuntime
 {
 	public MyRuntime()
 	{
-		
 	}
 }
 
@@ -100,39 +101,26 @@ internal static class EGL
 	public static extern int SwapInterval(IntPtr display, int interval);
 }
 
-internal static class Emscripten
-{
-	[DllImport("libEGL", EntryPoint = "emscripten_set_main_loop")]
-	[DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
-	public static extern unsafe void SetMainLoop(delegate* unmanaged[Cdecl/*, SuppressGCTransition*/]<void> func, int fps, int simulateInfiniteLoop);
-}
-
 public static class Test
 {
-	[UnmanagedCallersOnly(EntryPoint = "MainLoop", CallConvs = new[] { typeof(CallConvCdecl) })]
-	private static void MainLoop()
+	[JSInvokable("frame")]
+	public static ValueTask Frame(double time)
 	{
-		Console.WriteLine($"Hello frame!");
+		GL.glClearColor(0.7f, 0.2f, 1.0f, 1.0f);
+		GL.glClear((uint)AttribMask.ColorBufferBit);
+
+		return ValueTask.CompletedTask;
 	}
 
 	public static int Main(string[] args)
-    {
-		//unsafe
-		//{
-		//	Emscripten.SetMainLoop(&MainLoop, 60, 0);
-		//}
-
+	{
 		Console.WriteLine($"Hello from .Net6!");
-		// https://github.com/emepetres/dotnet-wasm-sample/blob/main/src/jsinteraction/wasm/WebAssemblyRuntime.cs
-		//using var runtime = new MyRuntime();
-		//runtime.Invoke<bool>("alert", "hello, world!");
 
 		var display = EGL.GetDisplay(IntPtr.Zero);
 		if (display == IntPtr.Zero)
 			throw new Exception("Display was null");
 
-		int major, minor;
-		if (!EGL.Initialize(display, out major, out minor))
+		if (!EGL.Initialize(display, out int major, out int minor))
 			throw new Exception("Initialize() returned false.");
 
 		int[] attributeList = new int[]
@@ -176,10 +164,11 @@ public static class Test
 		_ = EGL.Terminate(display);
 
 		GL.LoadAllFunctions(EGL.GetProcAddress);
-		GL.glClearColor(0.8f, 0.2f, 1.0f, 1.0f);
-		GL.glClear((uint)AttribMask.ColorBufferBit);
 
+		// https://github.com/emepetres/dotnet-wasm-sample/blob/main/src/jsinteraction/wasm/WebAssemblyRuntime.cs
+		using var runtime = new MyRuntime();
+		runtime.Invoke<object>("initialize");
 
 		return args.Length;
-    }
+	}
 }

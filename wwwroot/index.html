@@ -1,26 +1,36 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
-    />
-    <title>.Net6.0 Console Wasm Sample</title>
-  </head>
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport"
+				content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+	<title>.Net6.0 Console Wasm Sample</title>
+</head>
 
-  <body>
-    <div id="app">Hi! Check web console to see if the sample is working!</div>
+<body>
+	<div id="app">Hi! Check web console to see if the sample is working!</div>
 
-    <canvas width="600" height="675" id="canvas">
-    </canvas>
+	<canvas width="600" height="675" id="canvas">
+	</canvas>
 
-    <script type='text/javascript'>
-      var Module = {
-        canvas: document.getElementById("canvas")
-      };
-    </script>
+	<script type='text/javascript'>
+		var canvas = document.getElementById("canvas");
+		var Module = {
+			canvas: canvas
+		};
 
-    <script src="_framework/blazor.webassembly.js"></script>
-  </body>
+		window.initialize = (instance) => {
+			window.blazorInstance = instance;
+			window.requestAnimationFrame(frame);
+		}
+
+		function frame(time) {
+			//window.blazorInstance.invokeMethodAsync("Frame", timeStamp);
+			DotNet.invokeMethodAsync("WasmTest", "frame", time);
+			window.requestAnimationFrame(frame);
+		}
+	</script>
+
+	<script src="_framework/blazor.webassembly.js"></script>
+</body>
 </html>
