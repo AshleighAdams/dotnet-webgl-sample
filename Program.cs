@@ -163,10 +163,6 @@ public static class Test
 		if (context == IntPtr.Zero)
 			throw new Exception("CreateContext() failed");
 
-		IntPtr eglConfAttrVisualID = IntPtr.Zero;
-		if (!EGL.GetConfigAttrib(display, config, (IntPtr)EGL.EGL_NATIVE_VISUAL_ID, ref eglConfAttrVisualID));
-			throw new Exception("GetConfigAttrib() failed");
-
 		// now create the surface
 		var surface = EGL.CreateWindowSurface(display, config, IntPtr.Zero, IntPtr.Zero);
 		if (surface == IntPtr.Zero)
