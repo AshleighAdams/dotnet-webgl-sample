@@ -175,9 +175,11 @@ public static class Test
 		_ = EGL.DestroySurface(display, surface);
 		_ = EGL.Terminate(display);
 
-		//GL.LoadAllFunctions(EGL.GetProcAddress);
-		//GL.glFlush();
-		
+		GL.LoadAllFunctions(EGL.GetProcAddress);
+		GL.glClearColor(0.8f, 0.2f, 1.0f, 1.0f);
+		GL.glClear((uint)AttribMask.ColorBufferBit);
+
+
 		return args.Length;
     }
 }
