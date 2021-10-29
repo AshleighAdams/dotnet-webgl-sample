@@ -159,9 +159,9 @@ public static class Test
 		if (!EGL.MakeCurrent(display, surface, surface, context))
 			throw new Exception("MakeCurrent() failed");
 
-		_ = EGL.DestroyContext(display, context);
-		_ = EGL.DestroySurface(display, surface);
-		_ = EGL.Terminate(display);
+		//_ = EGL.DestroyContext(display, context);
+		//_ = EGL.DestroySurface(display, surface);
+		//_ = EGL.Terminate(display);
 
 		GL.LoadAllFunctions(EGL.GetProcAddress);
 
