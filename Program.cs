@@ -104,12 +104,10 @@ internal static class EGL
 public static class Test
 {
 	[JSInvokable("frame")]
-	public static ValueTask Frame(double time)
+	public static void Frame(double time)
 	{
 		GL.glClearColor(0.7f, 0.2f, 1.0f, 1.0f);
 		GL.glClear((uint)AttribMask.ColorBufferBit);
-
-		return ValueTask.CompletedTask;
 	}
 
 	public static int Main(string[] args)
@@ -167,7 +165,7 @@ public static class Test
 
 		// https://github.com/emepetres/dotnet-wasm-sample/blob/main/src/jsinteraction/wasm/WebAssemblyRuntime.cs
 		using var runtime = new MyRuntime();
-		runtime.Invoke<object>("initialize");
+		runtime.InvokeVoid("initialize");
 
 		return args.Length;
 	}
