@@ -1,0 +1,45 @@
+name: Continious Integration
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  build:
+    name: "Build"
+    runs-on: ubuntu-latest
+    steps:
+
+    - uses: actions/checkout@v2
+      with:
+        fetch-depth: '0'
+
+    - name: Setup .NET 6 SDK
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 6.0.x
+        include-prerelease: true
+
+    - name: Setup Verlite
+      run: |
+        verlite_version="$(grep '"Verlite\.MsBuild"' WasmTest.csproj | LC_ALL=en_US.utf8 grep -Po 'Version="\K[^"]+')"
+        dotnet tool install --global Verlite.CLI --version "$verlite_version"
+        verlite . --auto-fetch --verbosity verbatim
+
+    - name: Publish
+      run: dotnet publish --configuration Release -o artifacts
+
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: artifacts
+        path: |
+          artifacts/*
