@@ -27,6 +27,10 @@ jobs:
       with:
         dotnet-version: 6.0.x
 
+    - name: Install wasm-tools workload
+      run: |
+        dotnet workload install wasm-tools
+
     - name: Setup Verlite
       run: |
         verlite_version="$(grep '"Verlite\.MsBuild"' WasmTest.csproj | LC_ALL=en_US.utf8 grep -Po 'Version="\K[^"]+')"
