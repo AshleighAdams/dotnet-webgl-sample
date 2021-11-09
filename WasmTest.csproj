@@ -5,6 +5,7 @@
     <LangVersion>10</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <EmccFlags>-s FULL_ES3=1</EmccFlags>
+    <InvariantGlobalization>true</InvariantGlobalization>
     <!--<EmccFlags>-s MAX_WEBGL_VERSION=2</EmccFlags>-->
   </PropertyGroup>
 
@@ -12,20 +13,24 @@
     <PublishTrimmed Condition="'$(Configuration)' == 'Debug'">false</PublishTrimmed>
     <PublishTrimmed Condition="'$(Configuration)' == 'Release'">true</PublishTrimmed>
     <BlazorEnableCompression Condition="'$(Configuration)' == 'Debug'">false</BlazorEnableCompression>
+    <WasmBuildNative>true</WasmBuildNative>
     <!-- <RunAOTCompilation>true</RunAOTCompilation>
     <AOTMode>LLVMOnly</AOTMode> -->
   </PropertyGroup>
 
   <ItemGroup>
-    <NativeFileReference Include="libEGL.o" ScanForPInvokes="true" />
-    <NativeFileReference Include="openal32.o" ScanForPInvokes="true" />
+    <NativeFileReference Include="libEGL.c" ScanForPInvokes="true" />
+    <NativeFileReference Include="openal32.c" ScanForPInvokes="true" />
   </ItemGroup>
-  
+
+  <ItemGroup>
+    <TrimmerRootAssembly Include="Microsoft.AspNetCore.Components.WebAssembly" />
+  </ItemGroup>
+
   <ItemGroup>
     <PackageReference Include="Verlite.MsBuild" Version="2.0.1" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.0-rc.2.21480.10" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.0-rc.2.21480.10" PrivateAssets="All" />
-    <!--<PackageReference Include="Microsoft.JSInterop.WebAssembly" Version="6.0.0-rc.1.21452.15" />-->
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.0" PrivateAssets="All" />
     <PackageReference Include="WaveEngine.Bindings.OpenGLES" Version="1.0.4998" />
   </ItemGroup>
 

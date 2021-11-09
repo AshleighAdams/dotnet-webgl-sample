@@ -4,5 +4,11 @@ This is a minimum viable product for running WebGL, using dotnet6's BlazorWebass
 
 ## Areas needing work
 
-While running and debugging the project works, publishing (deploys) are not functional in this sample, in that a simple CDN can serve the project. If anyone knows how to fix this, I'm all all ears!
+The trimming is too excessive by default, so this workaround is needed to fix deploys:
+
+```xml
+  <ItemGroup>
+    <TrimmerRootAssembly Include="Microsoft.AspNetCore.Components.WebAssembly" />
+  </ItemGroup>
+```
 
