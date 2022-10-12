@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 using Microsoft.JSInterop.WebAssembly;
 using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
-using WaveEngine.Bindings.OpenGLES;
+using Evergine.Bindings.OpenGL;
 using System.Runtime.CompilerServices;
 using Microsoft.JSInterop;
 using System.Threading.Tasks;
@@ -107,12 +107,13 @@ public static class Test
 	public static void Frame(double time)
 	{
 		GL.glClearColor(0.7f, 0.2f, 1.0f, 1.0f);
-		GL.glClear((uint)AttribMask.ColorBufferBit);
+		GL.glClearDepth(0.0f);
+		GL.glClear((uint)(AttribMask.ColorBufferBit | AttribMask.DepthBufferBit));
 	}
 
 	public static int Main(string[] args)
 	{
-		Console.WriteLine($"Hello from .Net6!");
+		Console.WriteLine($"Hello from dotnet!");
 
 		var display = EGL.GetDisplay(IntPtr.Zero);
 		if (display == IntPtr.Zero)
