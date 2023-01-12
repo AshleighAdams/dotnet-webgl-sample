@@ -29,8 +29,8 @@
 
   <ItemGroup>
     <PackageReference Include="Verlite.MsBuild" Version="2.4.0" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.1" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.1" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.2" PrivateAssets="all" />
     <PackageReference Include="Evergine.Bindings.OpenGL" Version="2022.6.24.1" />
   </ItemGroup>
 
