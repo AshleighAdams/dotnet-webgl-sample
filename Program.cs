@@ -111,8 +111,7 @@ public static class Test
 	public static int Frame(double time, nint userData)
 	{
 		GL.glClearColor(0.7f, 0.2f, 1.0f, 1.0f);
-		GL.glClearDepth(0.0f);
-		GL.glClear((uint)(AttribMask.ColorBufferBit | AttribMask.DepthBufferBit));
+		GL.glClear((uint)(AttribMask.ColorBufferBit));
 
 		return 1;
 	}
