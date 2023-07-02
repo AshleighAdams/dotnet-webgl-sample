@@ -2,11 +2,8 @@ using System;
 using System.Runtime.InteropServices;
 
 using Microsoft.JSInterop.WebAssembly;
-using Microsoft.AspNetCore.Components.WebAssembly.Hosting;
 using Evergine.Bindings.OpenGL;
-using System.Runtime.CompilerServices;
 using Microsoft.JSInterop;
-using System.Threading.Tasks;
 
 namespace WasmTest;
 
@@ -101,14 +98,23 @@ internal static class EGL
 	public static extern int SwapInterval(IntPtr display, int interval);
 }
 
+internal static class Emscripten
+{
+	[DllImport("emscripten", EntryPoint = "emscripten_request_animation_frame_loop")]
+	[DefaultDllImportSearchPaths(DllImportSearchPath.SafeDirectories)]
+	internal static extern unsafe void RequestAnimationFrameLoop(void* f, nint userDataPtr);
+}
+
 public static class Test
 {
-	[JSInvokable("frame")]
-	public static void Frame(double time)
+	[UnmanagedCallersOnly]
+	public static int Frame(double time, nint userData)
 	{
 		GL.glClearColor(0.7f, 0.2f, 1.0f, 1.0f);
 		GL.glClearDepth(0.0f);
 		GL.glClear((uint)(AttribMask.ColorBufferBit | AttribMask.DepthBufferBit));
+
+		return 1;
 	}
 
 	public static int Main(string[] args)
@@ -124,15 +130,15 @@ public static class Test
 
 		int[] attributeList = new int[]
 		{
-				EGL.EGL_RED_SIZE  , 8,
-				EGL.EGL_GREEN_SIZE, 8,
-				EGL.EGL_BLUE_SIZE , 8,
-				EGL.EGL_DEPTH_SIZE, 24,
-				EGL.EGL_STENCIL_SIZE, 8,
-				EGL.EGL_SURFACE_TYPE, EGL.EGL_WINDOW_BIT,
-				EGL.EGL_RENDERABLE_TYPE, EGL.EGL_OPENGL_ES3_BIT,
-				EGL.EGL_SAMPLES, 16, //MSAA, 16 samples
-				EGL.EGL_NONE
+			EGL.EGL_RED_SIZE  , 8,
+			EGL.EGL_GREEN_SIZE, 8,
+			EGL.EGL_BLUE_SIZE , 8,
+			EGL.EGL_DEPTH_SIZE, 24,
+			EGL.EGL_STENCIL_SIZE, 8,
+			EGL.EGL_SURFACE_TYPE, EGL.EGL_WINDOW_BIT,
+			EGL.EGL_RENDERABLE_TYPE, EGL.EGL_OPENGL_ES3_BIT,
+			EGL.EGL_SAMPLES, 16, //MSAA, 16 samples
+			EGL.EGL_NONE
 		};
 
 		var config = IntPtr.Zero;
@@ -168,6 +174,11 @@ public static class Test
 		using var runtime = new MyRuntime();
 		runtime.InvokeVoid("initialize");
 
-		return args.Length;
+		unsafe
+		{
+			Emscripten.RequestAnimationFrameLoop((delegate* unmanaged<double, nint, int>)&Frame, nint.Zero);
+		}
+
+		return 0;
 	}
 }

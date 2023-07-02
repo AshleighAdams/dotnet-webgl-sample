@@ -19,13 +19,9 @@
 		};
 
 		window.initialize = () => {
-			window.requestAnimationFrame(frame);
+			// setup interop such as forwarding mouse/keyboard input
 		}
 
-		function frame(time) {
-			DotNet.invokeMethod("WasmTest", "frame", time);
-			window.requestAnimationFrame(frame);
-		}
 	</script>
 
 	<script src="_framework/blazor.webassembly.js"></script>

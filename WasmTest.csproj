@@ -4,7 +4,7 @@
     <TargetFramework>net7.0</TargetFramework>
     <LangVersion>11</LangVersion>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <EmccFlags>-s FULL_ES3=1</EmccFlags>
+    <EmccFlags>-s FULL_ES3=1 -lopenal -lGL</EmccFlags>
     <InvariantGlobalization>true</InvariantGlobalization>
     <!--<EmccFlags>-s MAX_WEBGL_VERSION=2</EmccFlags>-->
   </PropertyGroup>
@@ -14,13 +14,14 @@
     <PublishTrimmed Condition="'$(Configuration)' == 'Release'">true</PublishTrimmed>
     <BlazorEnableCompression Condition="'$(Configuration)' == 'Debug'">false</BlazorEnableCompression>
     <WasmBuildNative>true</WasmBuildNative>
-    <!-- <RunAOTCompilation>true</RunAOTCompilation>
-    <AOTMode>LLVMOnly</AOTMode> -->
+    <RunAOTCompilation>true</RunAOTCompilation>
+    <!--<AOTMode>LLVMOnly</AOTMode> -->
   </PropertyGroup>
 
   <ItemGroup>
     <NativeFileReference Include="libEGL.c" ScanForPInvokes="true" />
     <NativeFileReference Include="openal32.c" ScanForPInvokes="true" />
+    <NativeFileReference Include="emscripten.c" ScanForPInvokes="true" />
   </ItemGroup>
 
   <ItemGroup>
