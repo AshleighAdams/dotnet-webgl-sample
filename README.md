@@ -1,6 +1,6 @@
-# .NET 6 WebAssembly + WebGL
+# .NET WebAssembly + WebGL
 
-This is a minimum viable product for running WebGL, using dotnet6's BlazorWebassembly and WaveEngine's OpenGLES with emscripten, based on @emepetres's wasm sample projects.
+This is a minimum viable product for running WebGL, using dotnet's BlazorWebassembly and WaveEngine's OpenGLES with emscripten, based on @emepetres's wasm sample projects.
 
 ## Areas needing work
 

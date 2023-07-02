@@ -22,10 +22,10 @@ jobs:
       with:
         fetch-depth: '0'
 
-    - name: Setup .NET 6 SDK
+    - name: Setup .NET 7 SDK
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 6.0.x
+        dotnet-version: 7.0.x
 
     - name: Install wasm-tools workload
       run: |
