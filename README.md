@@ -1,14 +1,5 @@
-# .NET WebAssembly + WebGL
+# .NET WebGL sample
 
-This is a minimum viable product for running WebGL, using dotnet's BlazorWebassembly and WaveEngine's OpenGLES with emscripten, based on @emepetres's wasm sample projects.
+This is a minimum viable product for running WebGL, using dotnet's WebAssembly and Silk's OpenGLES bindings with emscripten.
 
-## Areas needing work
-
-The trimming is too excessive by default, so this workaround is needed to fix deploys:
-
-```xml
-  <ItemGroup>
-    <TrimmerRootAssembly Include="Microsoft.AspNetCore.Components.WebAssembly" />
-  </ItemGroup>
-```
-
+Thanks to WaveEngine/@emepetres's wasm sample projects for help and original samples and references.

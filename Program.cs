@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.JavaScript;
 using System.Runtime.Versioning;
 
-using Evergine.Bindings.OpenGL;
+using Silk.NET.OpenGLES;
 
 [assembly: SupportedOSPlatform("browser")]
 
@@ -147,11 +147,14 @@ internal static partial class Interop
 
 public static class Test
 {
+	private static GL? gl;
 	[UnmanagedCallersOnly]
 	public static int Frame(double time, nint userData)
 	{
-		GL.glClearColor(0.7f, 0.2f, 1.0f, 1.0f);
-		GL.glClear((uint)(AttribMask.ColorBufferBit));
+		ArgumentNullException.ThrowIfNull(gl);
+
+		gl.ClearColor(0.7f, 0.2f, 1.0f, 1.0f);
+		gl.Clear(ClearBufferMask.ColorBufferBit);
 
 		return 1;
 	}
@@ -207,7 +210,8 @@ public static class Test
 		//_ = EGL.DestroySurface(display, surface);
 		//_ = EGL.Terminate(display);
 
-		GL.LoadAllFunctions(EGL.GetProcAddress);
+		gl = GL.GetApi(EGL.GetProcAddress);
+		//gl = new GL(new EglContext());
 
 		Interop.Initialize();
 
