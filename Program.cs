@@ -1,20 +1,14 @@
 using System;
 using System.Runtime.InteropServices;
+using System.Runtime.InteropServices.JavaScript;
+using System.Runtime.Versioning;
 
-using Microsoft.JSInterop.WebAssembly;
 using Evergine.Bindings.OpenGL;
-using Microsoft.JSInterop;
+
+[assembly: SupportedOSPlatform("browser")]
 
 namespace WasmTest;
 
-internal class MyRuntime : WebAssemblyJSRuntime
-{
-	public MyRuntime()
-	{
-	}
-}
-
-[System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA2101:Specify marshaling for P/Invoke string arguments", Justification = "Incorrect warning generated")]
 internal static class EGL
 {
 	public const string LibEgl = "libEGL";
@@ -105,6 +99,52 @@ internal static class Emscripten
 	internal static extern unsafe void RequestAnimationFrameLoop(void* f, nint userDataPtr);
 }
 
+internal static partial class Interop
+{
+	[JSImport("initialize", "main.js")]
+	public static partial void Initialize();
+
+	[JSExport]
+	public static void OnKeyDown(bool shift, bool ctrl, bool alt, bool repeat, int code)
+	{
+	}
+
+	[JSExport]
+	public static void OnKeyUp(bool shift, bool ctrl, bool alt, int code)
+	{
+	}
+
+	[JSExport]
+	public static void OnMouseMove(float x, float y)
+	{
+	}
+
+	[JSExport]
+	public static void OnMouseDown(bool shift, bool ctrl, bool alt, int button)
+	{
+	}
+
+	[JSExport]
+	public static void OnMouseUp(bool shift, bool ctrl, bool alt, int button)
+	{
+	}
+
+	[JSExport]
+	public static void OnCanvasResize(float width, float height, float devicePixelRatio)
+	{
+	}
+
+	[JSExport]
+	public static void SetRootUri(string uri)
+	{
+	}
+
+	[JSExport]
+	public static void AddLocale(string locale)
+	{
+	}
+}
+
 public static class Test
 {
 	[UnmanagedCallersOnly]
@@ -169,9 +209,7 @@ public static class Test
 
 		GL.LoadAllFunctions(EGL.GetProcAddress);
 
-		// https://github.com/emepetres/dotnet-wasm-sample/blob/main/src/jsinteraction/wasm/WebAssemblyRuntime.cs
-		using var runtime = new MyRuntime();
-		runtime.InvokeVoid("initialize");
+		Interop.Initialize();
 
 		unsafe
 		{
