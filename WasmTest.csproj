@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+﻿<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
   <!-- https://github.com/emepetres/dotnet-wasm-sample/blob/main/src/console-native/Wasm.ConsoleNative.Sample.csproj -->
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
@@ -33,9 +33,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Silk.NET.OpenAL" Version="2.17.1" />
     <PackageReference Include="Verlite.MsBuild" Version="2.4.0" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.8" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.8" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.9" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.9" PrivateAssets="all" />
     <PackageReference Include="Silk.NET.OpenGLES" Version="2.17.1" />
   </ItemGroup>
 
