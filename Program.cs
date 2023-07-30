@@ -2,8 +2,8 @@ using System;
 using System.Runtime.InteropServices;
 
 using Microsoft.JSInterop.WebAssembly;
-using Evergine.Bindings.OpenGL;
 using Microsoft.JSInterop;
+using Silk.NET.OpenGLES;
 
 namespace WasmTest;
 
@@ -98,6 +98,14 @@ internal static class EGL
 	public static extern int SwapInterval(IntPtr display, int interval);
 }
 
+internal static class Trampolines
+{
+	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+	private delegate void ClearColor_t(float r, float g, float b, float a);
+	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+	private delegate void Clear_t(ClearBufferMask mask);
+}
+
 internal static class Emscripten
 {
 	[DllImport("emscripten", EntryPoint = "emscripten_request_animation_frame_loop")]
@@ -107,11 +115,14 @@ internal static class Emscripten
 
 public static class Test
 {
+	private static GL? gl;
 	[UnmanagedCallersOnly]
 	public static int Frame(double time, nint userData)
 	{
-		GL.glClearColor(0.7f, 0.2f, 1.0f, 1.0f);
-		GL.glClear((uint)(AttribMask.ColorBufferBit));
+		ArgumentNullException.ThrowIfNull(gl);
+
+		gl.ClearColor(0.7f, 0.2f, 1.0f, 1.0f);
+		gl.Clear(ClearBufferMask.ColorBufferBit);
 
 		return 1;
 	}
@@ -167,7 +178,8 @@ public static class Test
 		//_ = EGL.DestroySurface(display, surface);
 		//_ = EGL.Terminate(display);
 
-		GL.LoadAllFunctions(EGL.GetProcAddress);
+		gl = GL.GetApi(EGL.GetProcAddress);
+		//gl = new GL(new EglContext());
 
 		// https://github.com/emepetres/dotnet-wasm-sample/blob/main/src/jsinteraction/wasm/WebAssemblyRuntime.cs
 		using var runtime = new MyRuntime();
