@@ -41,9 +41,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <NativeFileReference Include="libEGL.c" ScanForPInvokes="true" />
-    <NativeFileReference Include="openal32.c" ScanForPInvokes="true" />
-    <NativeFileReference Include="emscripten.c" ScanForPInvokes="true" />
+    <NativeFileReference Include="Native/libEGL.c" ScanForPInvokes="true" />
+    <NativeFileReference Include="Native/openal32.c" ScanForPInvokes="true" />
+    <NativeFileReference Include="Native/emscripten.c" ScanForPInvokes="true" />
 
     <WasmExtraFilesToDeploy Include="index.html" />
     <WasmExtraFilesToDeploy Include="main.js" />
