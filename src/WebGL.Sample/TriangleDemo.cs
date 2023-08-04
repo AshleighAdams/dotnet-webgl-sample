@@ -2,8 +2,11 @@ using System;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Numerics;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
+
+using CoroutineScheduler;
 
 using Silk.NET.OpenGLES;
 
@@ -12,6 +15,7 @@ namespace WebGL.Sample;
 public class TriangleDemo
 {
 	private GL Gl { get; }
+	private Scheduler Scheduler { get; }
 	
 	private static async Task<string> DownloadFile(
 		HttpClient client,
@@ -67,6 +71,8 @@ public class TriangleDemo
 		string fragmentSource)
 	{
 		Gl = gl;
+		Scheduler = new();
+		_ = Scheduler.SpawnTask(LogicThread);
 
 		// setup the vertex buffer to draw
 		VertexBuffer = new VertexShaderInput[TriangleVerts.Length];
@@ -176,6 +182,9 @@ public class TriangleDemo
 	private float TriangleRotation { get; set; }
 	public unsafe void Render()
 	{
+		// iterate our logic thread
+		Scheduler.Resume();
+
 		// update the vertex buffer
 		var modelMatrix =
 			Matrix3x2.CreateTranslation(TriangleTranslation) *
@@ -204,5 +213,31 @@ public class TriangleDemo
 	internal void CanvasResized(int width, int height)
 	{
 		Gl.Viewport(0, 0, (uint)width, (uint)height);
+	}
+
+	public async Task MoveTo(Vector2 position, float speed)
+	{
+		var delta = position - TriangleTranslation;
+		var deltaPerFrame = delta / delta.Length() * speed;
+
+		int count = (int)(delta.Length() / deltaPerFrame.Length());
+		for (int i = 0; i < count; i++)
+		{
+			TriangleTranslation += deltaPerFrame;
+			await Scheduler.Yield();
+		}
+		TriangleTranslation = position;
+	}
+
+	private async Task LogicThread()
+	{
+		const float speed = 0.01f;
+		while (true)
+		{
+			await MoveTo(new Vector2(-0.5f, +0.0f), speed);
+			await MoveTo(new Vector2(+0.0f, +0.5f), speed);
+			await MoveTo(new Vector2(+0.5f, +0.0f), speed);
+			await MoveTo(new Vector2(+0.0f, -0.5f), speed);
+		}
 	}
 }
