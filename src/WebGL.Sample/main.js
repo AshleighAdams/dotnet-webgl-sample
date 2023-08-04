@@ -7,7 +7,7 @@ const { setModuleImports, getAssemblyExports, getConfig } = await dotnet
 
 const config = getConfig();
 const exports = await getAssemblyExports(config.mainAssemblyName);
-const interop = exports.WasmTest.Interop;
+const interop = exports.WebGL.Sample.Interop;
 
 var canvas = globalThis.document.getElementById("canvas");
 dotnet.instance.Module["canvas"] = canvas;

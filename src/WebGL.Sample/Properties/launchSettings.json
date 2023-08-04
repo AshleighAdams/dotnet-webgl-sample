@@ -1,6 +1,6 @@
 {
   "profiles": {
-    "WasmTest": {
+    "WebGL.Sample": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {

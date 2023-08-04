@@ -32,9 +32,10 @@
     <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
 
-  <!--<ItemGroup>
+  <ItemGroup>
     <WasmExtraFilesToDeploy Include="$(MSBuildThisFileDirectory)Assets\**" TargetPath="Assets/%(RecursiveDir)%(Filename)%(Extension)" />
-  </ItemGroup>-->
+  </ItemGroup>
+  
   <ItemGroup>
     <TrimmableAssembly Include="Silk.NET.Maths" />
   </ItemGroup>
@@ -50,5 +51,4 @@
     <PackageReference Include="Verlite.MsBuild" Version="2.4.0" PrivateAssets="All" />
     <PackageReference Include="Silk.NET.OpenGLES" Version="2.17.1" />
   </ItemGroup>
-
 </Project>

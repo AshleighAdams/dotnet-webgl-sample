@@ -1,7 +1,7 @@
-﻿using System;
+using System;
 using System.Runtime.InteropServices;
 
-namespace WasmTest;
+namespace WebGL.Sample;
 
 internal static class EGL
 {

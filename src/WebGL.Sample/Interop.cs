@@ -1,6 +1,9 @@
-﻿using System.Runtime.InteropServices.JavaScript;
+using System;
+using System.Runtime.InteropServices.JavaScript;
 
-namespace WasmTest;
+using Silk.NET.OpenGLES;
+
+namespace WebGL.Sample;
 
 internal static partial class Interop
 {
@@ -35,11 +38,13 @@ internal static partial class Interop
 	[JSExport]
 	public static void OnCanvasResize(float width, float height, float devicePixelRatio)
 	{
+		Test.CanvasResized((int)width, (int)height);
 	}
 
 	[JSExport]
 	public static void SetRootUri(string uri)
 	{
+		Test.BaseAddress = new Uri(uri);
 	}
 
 	[JSExport]

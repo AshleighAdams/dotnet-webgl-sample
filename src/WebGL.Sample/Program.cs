@@ -1,29 +1,38 @@
 using System;
 using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
-
+using System.Threading.Tasks;
 
 using Silk.NET.OpenGLES;
 
 [assembly: SupportedOSPlatform("browser")]
 
-namespace WasmTest;
+namespace WebGL.Sample;
 
 public static class Test
 {
-	private static GL? gl;
+	public static Uri? BaseAddress { get; internal set; }
+	private static TriangleDemo? Demo { get; set;  }
 	[UnmanagedCallersOnly]
 	public static int Frame(double time, nint userData)
 	{
-		ArgumentNullException.ThrowIfNull(gl);
+		ArgumentNullException.ThrowIfNull(Demo);
 
-		gl.ClearColor(0.7f, 0.2f, 1.0f, 1.0f);
-		gl.Clear(ClearBufferMask.ColorBufferBit);
+		Demo.Render();
 
 		return 1;
 	}
 
-	public static int Main(string[] args)
+	private static int CanvasWidth { get; set; }
+	private static int CanvasHeight { get; set; }
+	public static void CanvasResized(int width, int height)
+	{
+		CanvasWidth = width;
+		CanvasHeight = height;
+		Demo?.CanvasResized(CanvasWidth, CanvasHeight);
+	}
+
+	public async static Task Main(string[] args)
 	{
 		Console.WriteLine($"Hello from dotnet!");
 
@@ -74,18 +83,19 @@ public static class Test
 		//_ = EGL.DestroySurface(display, surface);
 		//_ = EGL.Terminate(display);
 
-		TrampolineFuncs.LoadDelegates();
+		TrampolineFuncs.ApplyWorkaroundFixingInvocations();
 
-		gl = GL.GetApi(EGL.GetProcAddress);
-
+		var gl = GL.GetApi(EGL.GetProcAddress);
 
 		Interop.Initialize();
+		ArgumentNullException.ThrowIfNull(BaseAddress);
+
+		Demo = await TriangleDemo.LoadAsync(gl, BaseAddress);
+		Demo?.CanvasResized(CanvasWidth, CanvasHeight);
 
 		unsafe
 		{
 			Emscripten.RequestAnimationFrameLoop((delegate* unmanaged<double, nint, int>)&Frame, nint.Zero);
 		}
-
-		return 0;
 	}
 }
