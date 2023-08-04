@@ -1,23 +1,40 @@
-<Project Sdk="Microsoft.NET.Sdk.BlazorWebAssembly">
+<Project Sdk="Microsoft.NET.Sdk">
   <!-- https://github.com/emepetres/dotnet-wasm-sample/blob/main/src/console-native/Wasm.ConsoleNative.Sample.csproj -->
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
     <LangVersion>11</LangVersion>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <EmccFlags>-s FULL_ES3=1 -lopenal -lGL</EmccFlags>
+    <Nullable>enable</Nullable>
+    <OutputType>Exe</OutputType>
+    <RuntimeIdentifier>browser-wasm</RuntimeIdentifier>
+    <NoWarn>$(NoWarn);RCS1090</NoWarn>
     <InvariantGlobalization>true</InvariantGlobalization>
-    <!--<EmccFlags>-s MAX_WEBGL_VERSION=2</EmccFlags>-->
+    <EmccFlags>-s FULL_ES3=1 -lopenal -lGL -s</EmccFlags>
+    <WasmMainJSPath>main.js</WasmMainJSPath>
   </PropertyGroup>
-
+  
   <PropertyGroup>
-    <PublishTrimmed Condition="'$(Configuration)' == 'Debug'">false</PublishTrimmed>
-    <PublishTrimmed Condition="'$(Configuration)' == 'Release'">true</PublishTrimmed>
-    <BlazorEnableCompression Condition="'$(Configuration)' == 'Debug'">false</BlazorEnableCompression>
+    <PublishTrimmed>true</PublishTrimmed>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <WasmBuildNative>true</WasmBuildNative>
     <RunAOTCompilation>true</RunAOTCompilation>
-    <!--<AOTMode>LLVMOnly</AOTMode> -->
+    <!-- Disable SIMD support as it's prerelease only on Safari -->
+    <!--<WasmEnableSIMD>true</WasmEnableSIMD>-->
+    <!-- Normal,JustInterp,Full,FullInterp,Hybrid,LLVMOnly,LLVMOnlyInterp -->
+    <!-- <AOTMode>LLVMOnly</AOTMode> -->
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DebugType>none</DebugType>
+    <DebugSymbols>false</DebugSymbols>
+  </PropertyGroup>
+
+  <!--<ItemGroup>
+    <WasmExtraFilesToDeploy Include="$(MSBuildThisFileDirectory)Assets\**" TargetPath="Assets/%(RecursiveDir)%(Filename)%(Extension)" />
+  </ItemGroup>-->
   <ItemGroup>
     <TrimmableAssembly Include="Silk.NET.Maths" />
   </ItemGroup>
@@ -26,16 +43,11 @@
     <NativeFileReference Include="libEGL.c" ScanForPInvokes="true" />
     <NativeFileReference Include="openal32.c" ScanForPInvokes="true" />
     <NativeFileReference Include="emscripten.c" ScanForPInvokes="true" />
-  </ItemGroup>
 
-  <ItemGroup>
-    <TrimmerRootAssembly Include="Microsoft.AspNetCore.Components.WebAssembly" />
-  </ItemGroup>
+    <WasmExtraFilesToDeploy Include="index.html" />
+    <WasmExtraFilesToDeploy Include="main.js" />
 
-  <ItemGroup>
     <PackageReference Include="Verlite.MsBuild" Version="2.4.0" PrivateAssets="All" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="7.0.8" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="7.0.8" PrivateAssets="all" />
     <PackageReference Include="Silk.NET.OpenGLES" Version="2.17.1" />
   </ItemGroup>
 
