@@ -13,15 +13,14 @@
   </PropertyGroup>
   
   <PropertyGroup>
-    <PublishTrimmed Condition="'$(Configuration)' == 'Debug'">false</PublishTrimmed>
-    <PublishTrimmed Condition="'$(Configuration)' == 'Release'">true</PublishTrimmed>
+    <PublishTrimmed>true</PublishTrimmed>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <WasmBuildNative>true</WasmBuildNative>
     <RunAOTCompilation>true</RunAOTCompilation>
     <!-- Disable SIMD support as it's prerelease only on Safari -->
     <!--<WasmEnableSIMD>true</WasmEnableSIMD>-->
     <!-- Normal,JustInterp,Full,FullInterp,Hybrid,LLVMOnly,LLVMOnlyInterp -->
-    <AOTMode>LLVMOnly</AOTMode>
+    <!-- <AOTMode>LLVMOnly</AOTMode> -->
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

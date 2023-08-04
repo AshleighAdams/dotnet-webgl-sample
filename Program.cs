@@ -93,12 +93,18 @@ internal static class EGL
 	public static extern int SwapInterval(IntPtr display, int interval);
 }
 
-internal static class Trampolines
+internal static class FuncPtr
 {
 	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-	private delegate void ClearColor_t(float r, float g, float b, float a);
+	public delegate void ClearColor_t(float r, float g, float b, float a);
 	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-	private delegate void Clear_t(ClearBufferMask mask);
+	public delegate void Clear_t(ClearBufferMask mask);
+
+	public static void LoadDelegates()
+	{
+		// this somehow allows our AOT'd build to call the OpenGL functions
+		Marshal.GetDelegateForFunctionPointer(new nint(1), typeof(Clear_t));
+	}
 }
 
 internal static class Emscripten
@@ -220,7 +226,8 @@ public static class Test
 		//_ = EGL.Terminate(display);
 
 		gl = GL.GetApi(EGL.GetProcAddress);
-		//gl = new GL(new EglContext());
+
+		FuncPtr.LoadDelegates();
 
 		Interop.Initialize();
 
