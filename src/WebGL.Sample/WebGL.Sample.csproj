@@ -18,7 +18,7 @@
     <WasmBuildNative>true</WasmBuildNative>
     <RunAOTCompilation>true</RunAOTCompilation>
     <!-- Disable SIMD support as it's prerelease only on Safari -->
-    <!--<WasmEnableSIMD>true</WasmEnableSIMD>-->
+    <WasmEnableSIMD>false</WasmEnableSIMD>
     <!-- Normal,JustInterp,Full,FullInterp,Hybrid,LLVMOnly,LLVMOnlyInterp -->
     <!-- <AOTMode>LLVMOnly</AOTMode> -->
   </PropertyGroup>
@@ -32,23 +32,21 @@
     <DebugSymbols>false</DebugSymbols>
   </PropertyGroup>
 
-  <!--<ItemGroup>
-    <WasmExtraFilesToDeploy Include="$(MSBuildThisFileDirectory)Assets\**" TargetPath="Assets/%(RecursiveDir)%(Filename)%(Extension)" />
-  </ItemGroup>-->
   <ItemGroup>
-    <TrimmableAssembly Include="Silk.NET.Maths" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <NativeFileReference Include="libEGL.c" ScanForPInvokes="true" />
-    <NativeFileReference Include="openal32.c" ScanForPInvokes="true" />
-    <NativeFileReference Include="emscripten.c" ScanForPInvokes="true" />
+    <NativeFileReference Include="Native/libEGL.c" ScanForPInvokes="true" />
+    <NativeFileReference Include="Native/openal32.c" ScanForPInvokes="true" />
+    <NativeFileReference Include="Native/emscripten.c" ScanForPInvokes="true" />
 
     <WasmExtraFilesToDeploy Include="index.html" />
     <WasmExtraFilesToDeploy Include="main.js" />
-
-    <PackageReference Include="Verlite.MsBuild" Version="2.4.0" PrivateAssets="All" />
-    <PackageReference Include="Silk.NET.OpenGLES" Version="2.17.1" />
+    <WasmExtraFilesToDeploy Include="$(MSBuildThisFileDirectory)Assets\**" TargetPath="Assets/%(RecursiveDir)%(Filename)%(Extension)" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="CoroutineScheduler" Version="0.3.0" />
+    <PackageReference Include="Verlite.MsBuild" Version="2.4.0" PrivateAssets="All" />
+    <PackageReference Include="Silk.NET.OpenGLES" Version="2.17.1" />
+    
+    <TrimmableAssembly Include="Silk.NET.Maths" />
+  </ItemGroup>
 </Project>
