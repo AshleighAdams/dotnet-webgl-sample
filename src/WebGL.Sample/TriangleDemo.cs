@@ -189,7 +189,7 @@ public class TriangleDemo
 			IndexBuffer[i] = MeshData.TriangleIndices[i];
 
 		// dispatch GL commands
-		Gl.ClearColor(0.318f, 0.169f, 0.831f, 1.0f);
+		Gl.ClearColor(0.392f, 0.584f, 0.929f, 1.0f);
 		Gl.Clear(ClearBufferMask.ColorBufferBit);
 
 		BindVAO();
@@ -224,10 +224,10 @@ public class TriangleDemo
 		const float speed = 0.01f;
 		while (true)
 		{
-			await MoveTo(new Vector2(-0.70f, +0.00f), speed);
-			await MoveTo(new Vector2(+0.00f, +0.85f), speed);
-			await MoveTo(new Vector2(+0.70f, +0.00f), speed);
-			await MoveTo(new Vector2(+0.00f, -0.85f), speed);
+			await MoveTo(new Vector2(-0.7f, +0.0f), speed);
+			await MoveTo(new Vector2(+0.0f, +0.5f), speed);
+			await MoveTo(new Vector2(+0.7f, +0.0f), speed);
+			await MoveTo(new Vector2(+0.0f, -0.5f), speed);
 		}
 	}
 }
