@@ -12,7 +12,7 @@ namespace WebGL.Sample;
 public static class Test
 {
 	public static Uri? BaseAddress { get; internal set; }
-	private static TriangleDemo? Demo { get; set;  }
+	private static MeshDemo? Demo { get; set;  }
 	[UnmanagedCallersOnly]
 	public static int Frame(double time, nint userData)
 	{
@@ -90,7 +90,7 @@ public static class Test
 		Interop.Initialize();
 		ArgumentNullException.ThrowIfNull(BaseAddress);
 
-		Demo = await TriangleDemo.LoadAsync(gl, BaseAddress);
+		Demo = await MeshDemo.LoadAsync(gl, BaseAddress);
 		Demo?.CanvasResized(CanvasWidth, CanvasHeight);
 
 		unsafe

@@ -19,7 +19,7 @@ public struct VertexShaderInput
 	public Vector3 Color;
 };
 
-public class TriangleDemo
+public class MeshDemo
 {
 	private GL Gl { get; }
 	private Scheduler Scheduler { get; }
@@ -34,7 +34,7 @@ public class TriangleDemo
 		return await response.Content.ReadAsStringAsync();
 	}
 
-	public static async Task<TriangleDemo> LoadAsync(GL gl, Uri baseAddress)
+	public static async Task<MeshDemo> LoadAsync(GL gl, Uri baseAddress)
 	{
 		var client = new HttpClient()
 		{
@@ -49,14 +49,14 @@ public class TriangleDemo
 		var vertSource = await vertResponseTask;
 		var fragSource = await fragResponseTask;
 
-		return new TriangleDemo(gl, vertSource, fragSource);
+		return new MeshDemo(gl, vertSource, fragSource);
 	}
 
 	// shader ids
 	private uint ShaderProgram { get; }
 	private uint VertexShader { get; }
 	private uint FragmentShader { get; }
-	public int ViewProjectionLocation { get; }
+	private int ViewProjectionLocation { get; }
 	// vao ids
 	private uint VAO { get; set; }
 	private uint VBO { get; set; }
@@ -64,7 +64,7 @@ public class TriangleDemo
 	private VertexShaderInput[] VertexBuffer { get; }
 	private ushort[] IndexBuffer { get; }
 
-	unsafe private TriangleDemo(
+	unsafe private MeshDemo(
 		GL gl,
 		string vertexSource,
 		string fragmentSource)
@@ -202,6 +202,9 @@ public class TriangleDemo
 	internal void CanvasResized(int width, int height)
 	{
 		Gl.Viewport(0, 0, (uint)width, (uint)height);
+
+		// note: in a rea lgame, aspect ratio corrections should be applies
+		// to your projection transform, not your model transform
 		LogoScale = new Vector2(height / (float)width, 1.0f);
 	}
 
@@ -221,7 +224,7 @@ public class TriangleDemo
 
 	private async Task LogicThread()
 	{
-		const float speed = 0.01f;
+		const float speed = 0.005f;
 		while (true)
 		{
 			await MoveTo(new Vector2(-0.7f, +0.0f), speed);
