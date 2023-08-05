@@ -2,7 +2,6 @@ using System;
 using System.Diagnostics;
 using System.Net.Http;
 using System.Numerics;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
 
@@ -11,6 +10,14 @@ using CoroutineScheduler;
 using Silk.NET.OpenGLES;
 
 namespace WebGL.Sample;
+
+[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "POD")]
+[StructLayout(LayoutKind.Sequential, Pack = 1)]
+public struct VertexShaderInput
+{
+	public Vector2 Vertex;
+	public Vector3 Color;
+};
 
 public class TriangleDemo
 {
@@ -49,16 +56,8 @@ public class TriangleDemo
 	private uint ShaderProgram { get; }
 	private uint VertexShader { get; }
 	private uint FragmentShader { get; }
-	// vao ids
-	[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "POD")]
-	[StructLayout(LayoutKind.Sequential, Pack = 1)]
-	private struct VertexShaderInput
-	{
-		public Vector2 Vertex;
-		public Vector3 Color;
-	};
-
 	public int ViewProjectionLocation { get; }
+	// vao ids
 	private uint VAO { get; set; }
 	private uint VBO { get; set; }
 	private uint VBI { get; set; }
@@ -75,8 +74,8 @@ public class TriangleDemo
 		_ = Scheduler.SpawnTask(LogicThread);
 
 		// setup the vertex buffer to draw
-		VertexBuffer = new VertexShaderInput[TriangleVerts.Length];
-		IndexBuffer = new ushort[TriangleIndices.Length];
+		VertexBuffer = new VertexShaderInput[MeshData.TriangleVerts.Length];
+		IndexBuffer = new ushort[MeshData.TriangleIndices.Length];
 
 		// create the shader
 		ShaderProgram = gl.CreateProgram();
@@ -166,20 +165,9 @@ public class TriangleDemo
 		Debug.Assert(Gl.GetError() == GLEnum.NoError);
 	}
 
-	private VertexShaderInput[] TriangleVerts { get; } = new VertexShaderInput[]
-	{
-		new() { Vertex = new(-0.5f, -0.5f), Color = new(1f, 0f, 0f) },
-		new() { Vertex = new(+0.0f, +0.5f), Color = new(0f, 1f, 0f) },
-		new() { Vertex = new(+0.5f, -0.5f), Color = new(0f, 0f, 1f) },
-	};
-	private ushort[] TriangleIndices { get; } = new ushort[]
-	{
-		0,
-		1,
-		2,
-	};
-	private Vector2 TriangleTranslation { get; set; }
-	private float TriangleRotation { get; set; }
+	private Vector2 LogoTranslation { get; set; }
+	private Vector2 LogoScale { get; set; } = Vector2.One;
+	private float LogoRotation { get; set; }
 	public unsafe void Render()
 	{
 		// iterate our logic thread
@@ -187,20 +175,21 @@ public class TriangleDemo
 
 		// update the vertex buffer
 		var modelMatrix =
-			Matrix3x2.CreateTranslation(TriangleTranslation) *
-			Matrix3x2.CreateRotation(TriangleRotation);
-		for (int i = 0; i < TriangleVerts.Length; i++)
+			Matrix3x2.CreateScale(LogoScale) *
+			Matrix3x2.CreateRotation(LogoRotation) *
+			Matrix3x2.CreateTranslation(LogoTranslation);
+		for (int i = 0; i < MeshData.TriangleVerts.Length; i++)
 		{
 			ref var dstVert = ref VertexBuffer[i];
-			ref var srcVert = ref TriangleVerts[i];
+			ref var srcVert = ref MeshData.TriangleVerts[i];
 			dstVert.Vertex = Vector2.Transform(srcVert.Vertex, modelMatrix);
 			dstVert.Color = srcVert.Color;
 		}
-		for (int i = 0; i < TriangleIndices.Length; i++)
-			IndexBuffer[i] = TriangleIndices[i];
+		for (int i = 0; i < MeshData.TriangleIndices.Length; i++)
+			IndexBuffer[i] = MeshData.TriangleIndices[i];
 
 		// dispatch GL commands
-		Gl.ClearColor(0.7f, 0.2f, 1.0f, 1.0f);
+		Gl.ClearColor(0.318f, 0.169f, 0.831f, 1.0f);
 		Gl.Clear(ClearBufferMask.ColorBufferBit);
 
 		BindVAO();
@@ -213,20 +202,21 @@ public class TriangleDemo
 	internal void CanvasResized(int width, int height)
 	{
 		Gl.Viewport(0, 0, (uint)width, (uint)height);
+		LogoScale = new Vector2(height / (float)width, 1.0f);
 	}
 
 	public async Task MoveTo(Vector2 position, float speed)
 	{
-		var delta = position - TriangleTranslation;
+		var delta = position - LogoTranslation;
 		var deltaPerFrame = delta / delta.Length() * speed;
 
 		int count = (int)(delta.Length() / deltaPerFrame.Length());
 		for (int i = 0; i < count; i++)
 		{
-			TriangleTranslation += deltaPerFrame;
+			LogoTranslation += deltaPerFrame;
 			await Scheduler.Yield();
 		}
-		TriangleTranslation = position;
+		LogoTranslation = position;
 	}
 
 	private async Task LogicThread()
@@ -234,10 +224,10 @@ public class TriangleDemo
 		const float speed = 0.01f;
 		while (true)
 		{
-			await MoveTo(new Vector2(-0.5f, +0.0f), speed);
-			await MoveTo(new Vector2(+0.0f, +0.5f), speed);
-			await MoveTo(new Vector2(+0.5f, +0.0f), speed);
-			await MoveTo(new Vector2(+0.0f, -0.5f), speed);
+			await MoveTo(new Vector2(-0.70f, +0.00f), speed);
+			await MoveTo(new Vector2(+0.00f, +0.85f), speed);
+			await MoveTo(new Vector2(+0.70f, +0.00f), speed);
+			await MoveTo(new Vector2(+0.00f, -0.85f), speed);
 		}
 	}
 }
