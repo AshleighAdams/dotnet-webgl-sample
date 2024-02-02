@@ -5,3 +5,5 @@ bin
 artifacts
 .vscode
 artifactspublish
+build
+buildpublish
