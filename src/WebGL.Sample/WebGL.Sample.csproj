@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <!-- https://github.com/emepetres/dotnet-wasm-sample/blob/main/src/console-native/Wasm.ConsoleNative.Sample.csproj -->
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
@@ -6,6 +6,7 @@
     <Nullable>enable</Nullable>
     <OutputType>Exe</OutputType>
     <RuntimeIdentifier>browser-wasm</RuntimeIdentifier>
+    <IsAotCompatible>true</IsAotCompatible>
     <NoWarn>$(NoWarn);RCS1090</NoWarn>
     <InvariantGlobalization>true</InvariantGlobalization>
     <EmccFlags>-s FULL_ES3=1 -lopenal -lGL -s</EmccFlags>

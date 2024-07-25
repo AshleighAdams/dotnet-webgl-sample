@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics.CodeAnalysis;
 using System.Runtime.InteropServices;
 
 
@@ -9,9 +10,11 @@ namespace WebGL.Sample;
 [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "OpenGL names")]
 internal unsafe static class TrampolineFuncs
 {
+	[DynamicDependency(DynamicallyAccessedMemberTypes.All, typeof(TrampolineFuncs))]
 	public static void ApplyWorkaroundFixingInvocations()
 	{
-		Marshal.GetDelegateForFunctionPointer(new nint(1), typeof(glClear_t));
+		Marshal.GetDelegateForFunctionPointer<glClear_t>(nint.Zero);
+		Marshal.GetDelegateForFunctionPointer<glClearColor_t>(nint.Zero);
 	}
 
 	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
