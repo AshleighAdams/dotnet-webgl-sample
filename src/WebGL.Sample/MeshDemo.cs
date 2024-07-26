@@ -133,7 +133,7 @@ public class MeshDemo
 		gl.BufferData(
 			BufferTargetARB.ArrayBuffer,
 			(nuint)(stride * VertexBuffer.Length),
-			nint.Zero,
+			in nint.Zero,
 			BufferUsageARB.StreamDraw);
 
 		gl.EnableVertexAttribArray(0); // vertex

@@ -30,17 +30,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
 
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
       with:
         fetch-depth: '0'
     - name: Setup Pages
       if: github.ref == 'refs/heads/master'
       uses: actions/configure-pages@v3
 
-    - name: Setup .NET 8 SDK
-      uses: actions/setup-dotnet@v3
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v4
       with:
-        dotnet-version: 8.0.x
+        dotnet-version: 9.0.x
+        dotnet-quality: preview
 
     - name: Install wasm-tools workload
       run: |
@@ -64,7 +65,7 @@ jobs:
         done
 
     - name: Upload Artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: artifacts
         path: |

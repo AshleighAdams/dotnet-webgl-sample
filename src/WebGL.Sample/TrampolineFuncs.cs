@@ -13,8 +13,7 @@ internal unsafe static class TrampolineFuncs
 	[DynamicDependency(DynamicallyAccessedMemberTypes.All, typeof(TrampolineFuncs))]
 	public static void ApplyWorkaroundFixingInvocations()
 	{
-		Marshal.GetDelegateForFunctionPointer<glClear_t>(nint.Zero);
-		Marshal.GetDelegateForFunctionPointer<glClearColor_t>(nint.Zero);
+		// this function needs to be here, else the trampolines below get trimmed
 	}
 
 	[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
